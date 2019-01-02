@@ -1,0 +1,65 @@
+ python3 --version
+ pip3 --version
+ virtualenv --version
+ sudo apt update
+ sudo apt install python3-dev python3-pip
+ sudo pip3 install -U virtualenv 
+ virtualenv --system-site-packages -p python3 ./venv1
+ source ./venv1/bin/activate
+
+Activate virtual environment:
+source venv1/bin/activate
+
+==============================================================
+ODBC drivers:
+https://docs.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?view=sql-server-2017
+sudo -H pip install pyodbc
+==============================================================
+
+git clone https://github.com/arunmandal53/facematch.git
+cd facematch
+pip install -r requirements.txt
+
+=========================Single Image=======================================
+Same Person:
+python face_match_demo.py --img1=images/kyc/K50649.jpg --img2=images/kyc/KNPR2363.jpg
+
+
+
+Face Detection:
+python face_detect_demo.py --img=images/kyc/R69022.jpg
+
+
+
+Not Same person:
+
+python face_match_demo.py --img1=images/kyc/K50649.jpg --img2=images/kyc/A60266.jpg
+
+============================================================================
+
+===========================Multiple images========================================
+m x n:	
+python face_match_mxn.py --db=/home/cso/facematch/images/kyc/
+
+
+1 x n:
+python face_match_1xn.py --db=/home/cso/facematch/images/kyc/ --img1=images/kyc/K50649.jpg
+
+
+============================================================================
+
+
+https://www.python36.com/face-detection-matching-using-facenet/
+
+
+============================================================================
+
+Django steps:
+python manage.py runserver
+
+for 1 x 1 compare goto: http://localhost:8000/one_to_one/
+
+for 1 x n compare goto: http://localhost:8000/one_to_many/
+
+
+
