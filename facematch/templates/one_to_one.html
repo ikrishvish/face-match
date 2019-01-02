@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>One to one</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        h3{
+            text-align: center;
+            text-transform: uppercase;
+        }
+        .main-container{
+            border-radius: 20px;
+            margin-top: 50px;
+            box-shadow: 0px 0px 20px;
+            padding: 50px;
+        }
+        .img-container{
+            height:500px;
+        }
+        .img-container input{
+            margin: 40px auto;
+        }
+        .img-container img{
+            width: 300px;
+            height: 400px;
+            margin: 0px auto;
+            display: block;
+        }
+        .second-row{
+            text-align: center;
+        }
+        .second-row .alert{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<h3>One to one image recognition system</h3>
+<div class="container main-container">
+    <div class="row">
+        <form>
+            <div class="col-sm-6 img-container">
+                <img id="frame1"/>
+                <input type="file" name="img1" id="img1">
+            </div>
+            <div class="col-sm-6 img-container">
+                <img id="frame2"/>
+                <input type="file" name="img2" id="img2">
+            </div>
+        </form>
+    </div>
+    <div class="row second-row">
+        <div class="alert alert-success"></div>
+        <button type="button" class="btn btn-default check-btn" onclick="submitImages()" >CHECK</button>
+        <button type="button" class="btn btn-default" onclick="location.reload()" >REFRESH</button>
+    </div>
+</div>
+</body>
+<script>
+function submitImages(){
+    $(".check-btn").attr("disabled", "disabled");
+    var form = document.forms[0];
+    var data = new FormData(form);
+    $.ajax({
+        url: "/one_to_one/",
+        data: data,
+        type: 'POST',
+        contentType: false,
+        processData: false,
+        success: function (data) {
+            if(data.success == true){
+                if(data.is_match == true){
+                    $(".second-row .alert").html("Both are same persons<br><strong>Similarity : " + data.similarity + "%</strong>");
+                    $(".second-row .alert").show();
+                }
+                else{
+                    $(".second-row .alert").html("Both are different persons");
+                    $(".second-row .alert").show();
+                }
+            }
+            else{
+                alert(data.message);
+            }
+        }
+    });
+}
+
+function showImage(img, frame) {
+    var src = document.getElementById(img);
+    var target = document.getElementById(frame);
+    var fr=new FileReader();
+    fr.onload = function(e) { target.src = this.result; };
+    src.addEventListener("change",function() {
+        fr.readAsDataURL(src.files[0]);
+    });
+}
+
+showImage("img1","frame1");
+showImage("img2","frame2");
+
+</script>
+</html>

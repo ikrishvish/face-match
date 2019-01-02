@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>One to many</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        h3{
+            text-align: center;
+            text-transform: uppercase;
+        }
+        .main-container{
+            border-radius: 20px;
+            margin-top: 50px;
+            box-shadow: 0px 0px 20px;
+            padding: 50px;
+        }
+        .img-container{
+            height:500px;
+        }
+        .img-container input{
+            margin: 40px auto;
+        }
+        .img-container img{
+            width: 300px;
+            height: 400px;
+            margin: 0px auto;
+            display: block;
+        }
+        .second-row{
+            text-align: center;
+        }
+        .second-row .alert{
+            display: none;
+        }
+        #tbl{
+            display: none;
+            width: 600px;
+            margin: 0px auto;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+<h3>One to many image recognition system</h3>
+<div class="container main-container">
+    <div class="row">
+        <form>
+            <div class="col-sm-12 img-container">
+                <img id="frame1"/>
+                <input type="file" name="img" id="img1">
+            </div>
+        </form>
+    </div>
+    <div class="row second-row">
+        <div class="alert alert-success"></div>
+        <table id="tbl" class="table table-hover">
+        </table>
+        <button type="button" class="btn btn-default check-btn" onclick="submitImages()" >CHECK</button>
+        <button type="button" class="btn btn-default" onclick="location.reload()" >REFRESH</button>
+    </div>
+</div>
+</body>
+<script>
+function submitImages(){
+    $(".check-btn").attr("disabled", "disabled");
+    var form = document.forms[0];
+    var data = new FormData(form);
+    $.ajax({
+        url: "/one_to_many/",
+        data: data,
+        type: 'POST',
+        contentType: false,
+        processData: false,
+        success: function (data) {
+            if(data.success == true){
+                if(Object.keys(data.compare_results).length > 0){
+                    var tbl = document.getElementById('tbl');
+                    tbl.innerHTML += "<tr><th>Image Name</th><th>Similarity Percentage</th></tr>";
+                    for(cr in data.compare_results){
+                        tbl.innerHTML += "<tr><td>" + cr + "</td>" + "<td>" + data.compare_results[cr].toString() + "</td></tr>";
+                    }
+                    $("#tbl").show();
+                }
+                else{
+                    $(".second-row .alert").html("No match found");
+                    $(".second-row .alert").show();
+                }
+            }
+            else{
+                alert(data.message);
+            }
+        }
+    });
+}
+
+function showImage(img, frame) {
+    var src = document.getElementById(img);
+    var target = document.getElementById(frame);
+    var fr=new FileReader();
+    fr.onload = function(e) { target.src = this.result; };
+    src.addEventListener("change",function() {
+        fr.readAsDataURL(src.files[0]);
+    });
+}
+
+showImage("img1","frame1");
+
+</script>
+</html>
