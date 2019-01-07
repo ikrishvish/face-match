@@ -6,7 +6,6 @@ import cv2
 import os
 from facematching.settings import BASE_DIR
 
-
 images_dir = os.path.join(BASE_DIR, 'facematch', 'images')
 
 # some constants kept as default from facenet

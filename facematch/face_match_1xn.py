@@ -7,7 +7,6 @@ import os
 import pandas as pd
 from facematching.settings import BASE_DIR
 
-
 # some constants kept as default from facenet
 minsize = 20
 threshold = [0.6, 0.7, 0.7]
